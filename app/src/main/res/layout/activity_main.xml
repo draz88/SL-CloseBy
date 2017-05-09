@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="se.deltazulu.www.sl_closeby.MainActivity">
+    tools:context="se.deltazulu.www.sl_closeby.MainActivity"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" />
 
     <ListView
         android:id="@+id/listView"

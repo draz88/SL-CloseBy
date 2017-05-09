@@ -1,11 +1,25 @@
 <resources>
 
+    <style name="MaterialTheme" parent="ParentMaterialTheme">
+
+    </style>
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ParentMaterialTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
+    <style name="OverflowTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">#DF000000</item>
+        <item name="android:colorBackground">#FFFCFFF6</item>
     </style>
 
 </resources>

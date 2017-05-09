@@ -22,13 +22,15 @@ import java.util.ArrayList;
  * Created by Dexter Zetterman on 2017-05-04.
  */
 
-public class SLCloseBy extends AsyncTask<String,String,String> {
+public class GetStations extends AsyncTask<UserInput,String,String> {
+
+    private static final String TAG = "GetStations";
 
     private ArrayList<Station> stationsList = new ArrayList<>();
 
     AsyncResponse deligate;
 
-    public SLCloseBy(AsyncResponse deligate) {
+    public GetStations(AsyncResponse deligate) {
         this.deligate = deligate;
     }
 
@@ -38,18 +40,16 @@ public class SLCloseBy extends AsyncTask<String,String,String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
-
-        Log.d("test","1");
+    protected String doInBackground(UserInput... params) {
 
         HttpURLConnection connection;
         BufferedReader reader;
 
         final String KEY = "2b5250718bd84e11926ab79a5f2e4888";
-        final double LAT = 59.293525;
-        final double LON = 18.083519;
-        final int MAX = 20;
-        final int RADUIS = 1000;
+        final double LAT = params[0].getLat();
+        final double LON = params[0].getLon();
+        final int MAX = params[0].getMax();
+        final int RADUIS = params[0].getRadius();
 
         try {
             URL url = new URL("http://api.sl.se/api2/nearbystops.json?key="+KEY+"&originCoordLat="+LAT+"&originCoordLong="+LON+"&maxresults="+MAX+"&radius="+RADUIS);
@@ -61,7 +61,6 @@ public class SLCloseBy extends AsyncTask<String,String,String> {
             String line = "";
             while ((line = reader.readLine()) != null){
                 builder.append(line);
-                Log.d("Json", "doInBackground: "+line);
             }
             String finalJson = builder.toString();
             return finalJson;
@@ -91,7 +90,6 @@ public class SLCloseBy extends AsyncTask<String,String,String> {
                 double lon = station.getDouble("lon");
                 int dist = station.getInt("dist");
                 stationsList.add(new Station(id,name,lat,lon,dist));
-                Log.d("station","name: "+name);
             }
             deligate.loadingEnd();
             deligate.processFinished(stationsList);

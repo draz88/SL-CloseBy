@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">SL-CloseBy</string>
+    <string name="app_name">SL - Close By</string>
+    <string name="reload">Reload</string>
+    <string name="settings">Settings</string>
+    <string name="settings_radius">Radius</string>
+    <string name="settings_maxResults">Max Results</string>
 </resources>
