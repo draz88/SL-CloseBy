@@ -21,5 +21,9 @@
         <item name="android:textColorPrimary">#DF000000</item>
         <item name="android:colorBackground">#FFFCFFF6</item>
     </style>
+    
+    <style name="DialogTheme" parent="ParentMaterialTheme">
+        <item name="android:textColorPrimary">#000000</item>
+    </style>
 
 </resources>

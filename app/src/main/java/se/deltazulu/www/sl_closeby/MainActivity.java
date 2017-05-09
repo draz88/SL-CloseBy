@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -92,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         settingsMaxResults = savedSettings.getInt("se.deltazulu.www.sl_closeby.maxResults",10);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(R.string.settings);
-        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        //LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        LayoutInflater inflater = LayoutInflater.from(new ContextThemeWrapper(this, R.style.DialogTheme));
         View alertView = inflater.inflate(R.layout.dialog_settings, null);
         final NumberPicker radius = (NumberPicker) alertView.findViewById(R.id.settings_radius);
         radius.setMinValue(50);
