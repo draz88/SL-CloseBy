@@ -1,5 +1,7 @@
 package se.deltazulu.www.sl_closeby;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 
 /**
@@ -10,4 +12,5 @@ public interface AsyncResponse {
     void loadingStart();
     void loadingEnd();
     void processFinished(ArrayList<Station> list);
+    void showImage(Bitmap bitmap);
 }

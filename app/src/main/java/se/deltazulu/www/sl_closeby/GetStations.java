@@ -7,6 +7,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,20 +81,35 @@ public class GetStations extends AsyncTask<UserInput,String,String> {
     protected void onPostExecute(String s) {
         try {
             JSONObject apiResult = new JSONObject(s);
-            JSONObject locationList = apiResult.getJSONObject("LocationList");
-            JSONArray stopLocation = locationList.getJSONArray("StopLocation");
-            for(int i = 0; i < stopLocation.length(); i++){
-                JSONObject station = stopLocation.getJSONObject(i);
-                int id = station.getInt("id");
-                String name = station.getString("name");
-                double lat = station.getDouble("lat");
-                double lon = station.getDouble("lon");
-                int dist = station.getInt("dist");
-                stationsList.add(new Station(id,name,lat,lon,dist));
+            JSONObject locationList = apiResult.optJSONObject("LocationList");
+            if(locationList != null) {
+                if(locationList.has("StopLocation")) {
+                    JSONArray stopLocation = locationList.optJSONArray("StopLocation");
+                    if (stopLocation != null) {
+                        for (int i = 0; i < stopLocation.length(); i++) {
+                            JSONObject station = stopLocation.getJSONObject(i);
+                            int id = station.getInt("id");
+                            String name = station.getString("name");
+                            double lat = station.getDouble("lat");
+                            double lon = station.getDouble("lon");
+                            int dist = station.getInt("dist");
+                            stationsList.add(new Station(id, name, lat, lon, dist));
+                        }
+                    }else {
+                        JSONObject stopLocationObject = locationList.getJSONObject("StopLocation");
+                        int id = stopLocationObject.getInt("id");
+                        String name = stopLocationObject.getString("name");
+                        double lat = stopLocationObject.getDouble("lat");
+                        double lon = stopLocationObject.getDouble("lon");
+                        int dist = stopLocationObject.getInt("dist");
+                        stationsList.add(new Station(id, name, lat, lon, dist));
+                    }
+                }else{
+                    //stationsList.add(new Station(0,"Inga stationer hittades.",0,0,0));
+                }
+                deligate.processFinished(stationsList);
+                deligate.loadingEnd();
             }
-            deligate.loadingEnd();
-            deligate.processFinished(stationsList);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
