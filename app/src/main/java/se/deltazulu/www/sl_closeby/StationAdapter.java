@@ -25,6 +25,8 @@ public class StationAdapter extends ArrayAdapter {
     private class ViewHolder{
         TextView name;
         TextView distance;
+        TextView lat;
+        TextView lon;
     }
 
     public StationAdapter(@NonNull Context context, @LayoutRes int resource, ArrayList<Station> items) {
@@ -43,6 +45,8 @@ public class StationAdapter extends ArrayAdapter {
             viewHolder = new ViewHolder();
             viewHolder.name = (TextView) converterView.findViewById(R.id.item_name);
             viewHolder.distance = (TextView) converterView.findViewById(R.id.item_distance);
+            viewHolder.lat = (TextView) converterView.findViewById(R.id.item_lat);
+            viewHolder.lon = (TextView) converterView.findViewById(R.id.item_lon);
             converterView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) converterView.getTag();
@@ -50,6 +54,8 @@ public class StationAdapter extends ArrayAdapter {
         Station row = this.items.get(position);
         viewHolder.name.setText(row.getName());
         viewHolder.distance.setText("Avstånd från din position: "+row.getDist()+"m");
+        viewHolder.lat.setText(""+row.getLat());
+        viewHolder.lon.setText(""+row.getLon());
         return converterView;
     }
 }

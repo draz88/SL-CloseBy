@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -219,12 +221,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         for(int i = 0; list.size() > i; i++){
             LatLng pos = new LatLng(list.get(i).getLat(),list.get(i).getLon());
             mMap.addMarker(new MarkerOptions().position(pos).title(list.get(i).getName()).snippet(list.get(i).getDist()+"m"));
+            final Context context = this;
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Log.d(TAG, "onInfoWindowClick: "+marker.getPosition());
+                    Log.d(TAG, "onInfoWindowClick: "+marker.getTitle());
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                    dialog.setTitle(marker.getTitle());
+                    LayoutInflater inflater = LayoutInflater.from(new ContextThemeWrapper(getApplicationContext(), R.style.DialogTheme));
+                    View alertView = inflater.inflate(R.layout.dialog_station, null);
+                    final ImageView stationImage = (ImageView) alertView.findViewById(R.id.station_image);
+
+                    ImageResponse imageResponse = new ImageResponse() {
+                        @Override
+                        public void showImage(Bitmap bitmap) {
+                            stationImage.setImageBitmap(bitmap);
+                        }
+                    };
+                    GetStreetViewImage getImage = new GetStreetViewImage(imageResponse,context);
+                    getImage.execute(marker.getPosition().latitude,marker.getPosition().longitude);
+                    dialog.setView(alertView);
+                    dialog.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    dialog.show();
+                }
+            });
         }
-    }
-
-    @Override
-    public void showImage(Bitmap bitmap) {
-
     }
 
     public void settings() {

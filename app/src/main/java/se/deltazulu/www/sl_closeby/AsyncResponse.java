@@ -12,5 +12,4 @@ public interface AsyncResponse {
     void loadingStart();
     void loadingEnd();
     void processFinished(ArrayList<Station> list);
-    void showImage(Bitmap bitmap);
 }

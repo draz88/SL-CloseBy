@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -88,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Go
 
 
         //GetStreetViewImage streetViewImage = new GetStreetViewImage(this,this);
-        //streetViewImage.execute();
+        //streetViewImage.execute(59.286475,18.079402);
     }
 
     public void getMySharedPreferences() {
@@ -202,11 +205,43 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Go
             Log.d(TAG, "processFinished: 0 results");
             Toast.makeText(this, "Inga stationer hittades", Toast.LENGTH_LONG).show();
         }
-    }
+        final Context context = this;
+        final AsyncResponse asyncResponse = this;
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView latView = (TextView) view.findViewById(R.id.item_lat);
+                double itemLat = Double.parseDouble(String.valueOf(latView.getText()));
+                TextView lonView = (TextView) view.findViewById(R.id.item_lon);
+                double itemLon = Double.parseDouble(String.valueOf(lonView.getText()));
+                TextView nameView = (TextView) view.findViewById(R.id.item_name);
+                String name = nameView.getText().toString();
 
-    @Override
-    public void showImage(Bitmap bitmap) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle(name);
+                LayoutInflater inflater = LayoutInflater.from(new ContextThemeWrapper(getApplicationContext(), R.style.DialogTheme));
+                View alertView = inflater.inflate(R.layout.dialog_station, null);
+                final ImageView stationImage = (ImageView) alertView.findViewById(R.id.station_image);
 
+                ImageResponse imageResponse = new ImageResponse() {
+                    @Override
+                    public void showImage(Bitmap bitmap) {
+                        stationImage.setImageBitmap(bitmap);
+                    }
+                };
+
+                GetStreetViewImage getImage = new GetStreetViewImage(imageResponse,context);
+                getImage.execute(itemLat,itemLon);
+                dialog.setView(alertView);
+                dialog.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        });
     }
 
     public void getCurrentLocation() {
